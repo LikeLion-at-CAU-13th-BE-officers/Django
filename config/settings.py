@@ -69,6 +69,10 @@ THIRD_PARTY_APPS = [
     "corsheaders",
     "rest_framework",
     "rest_framework_simplejwt",
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
+    "allauth.socialaccount.providers.google",  
 ]
 
 
@@ -85,8 +89,12 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    
+    "allauth.account.middleware.AccountMiddleware",  
 ]
+
+ACCOUNT_EMAIL_REQUIRED = True          
+ACCOUNT_USERNAME_REQUIRED = True         
+ACCOUNT_AUTHENTICATION_METHOD = "email"
 
 # simplejwt 관련 설정
 from datetime import timedelta

@@ -173,7 +173,10 @@ class PostList(APIView):
         serializer = PostSerializer(posts, many=True)
         return Response(serializer.data)
 
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 class PostDetail(APIView):
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
     def get(self, request, post_id):
         post = get_object_or_404(Post, id=post_id)
         serializer = PostSerializer(post)

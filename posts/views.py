@@ -78,11 +78,11 @@ def post_list(request):
         if category_name is not None:
             category = get_object_or_404(Category, category_name=category_name)
             post_ids = PostCategory.objects.filter(category=category).values_list('post_id', flat=True)
-            posts = Post.objects.filter(id__in=post_ids)
+            posts = Post.objects.filter(id__in=post_ids).order_by('-created')
 
         # 카테고리명을 입력 받지 않은 경우
         else:
-            posts = Post.objects.all()
+            posts = Post.objects.all().order_by('-created')
     
 		# 각 데이터를 Json 형식으로 변환하여 리스트에 저장
         post_json_all = []

@@ -70,12 +70,24 @@ def post_list(request):
     
     # 게시글 전체 조회
     if request.method == "GET":
-        post_all = Post.objects.all()
+
+        # 쿼리 파라미터로 카테고리명을 입력 받음
+        category_name = request.GET.get('category', None)
+
+        # 카테고리명을 입력 받은 경우
+        if category_name is not None:
+            category = get_object_or_404(Category, category_name=category_name)
+            post_ids = PostCategory.objects.filter(category=category).values_list('post_id', flat=True)
+            posts = Post.objects.filter(id__in=post_ids)
+
+        # 카테고리명을 입력 받지 않은 경우
+        else:
+            posts = Post.objects.all()
     
 		# 각 데이터를 Json 형식으로 변환하여 리스트에 저장
         post_json_all = []
         
-        for post in post_all:
+        for post in posts:
             post_json = {
                 "id": post.id,
                 "title" : post.title,

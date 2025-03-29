@@ -151,6 +151,30 @@ def post_detail(request, post_id):
                 'data': None
         })
     
+@require_http_methods(["GET"])
+def comment_list(request, post_id):
+
+    if request.method == "GET":
+        post = get_object_or_404(Post, id=post_id)
+        comments = Comment.objects.filter(post=post)
+
+        comments_json_list = []
+
+        for comment in comments:
+            comment_json = {
+                "id" : comment.id,
+                "writer" : comment.writer,
+                "content" : comment.content
+            }
+            comments_json_list.append(comment_json)
+
+        return JsonResponse({
+            'status' : 200,
+            'message' : '게시글 댓글 목록 조회 성공',
+            'data' : comments_json_list
+        })
+
+    
 from .serializers import PostSerializer
 
 # APIView를 사용하기 위해 import

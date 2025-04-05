@@ -70,12 +70,24 @@ def post_list(request):
     
     # 게시글 전체 조회
     if request.method == "GET":
-        post_all = Post.objects.all()
+
+        # 쿼리 파라미터로 카테고리명을 입력 받음
+        category_name = request.GET.get('category', None)
+
+        # 카테고리명을 입력 받은 경우
+        if category_name is not None:
+            category = get_object_or_404(Category, category_name=category_name)
+            post_ids = PostCategory.objects.filter(category=category).values_list('post_id', flat=True)
+            posts = Post.objects.filter(id__in=post_ids).order_by('-created')
+
+        # 카테고리명을 입력 받지 않은 경우
+        else:
+            posts = Post.objects.all().order_by('-created')
     
 		# 각 데이터를 Json 형식으로 변환하여 리스트에 저장
         post_json_all = []
         
-        for post in post_all:
+        for post in posts:
             post_json = {
                 "id": post.id,
                 "title" : post.title,
@@ -150,6 +162,30 @@ def post_detail(request, post_id):
                 'message': '게시글 삭제 성공',
                 'data': None
         })
+    
+@require_http_methods(["GET"])
+def comment_list(request, post_id):
+
+    if request.method == "GET":
+        post = get_object_or_404(Post, id=post_id)
+        comments = Comment.objects.filter(post=post)
+
+        comments_json_list = []
+
+        for comment in comments:
+            comment_json = {
+                "id" : comment.id,
+                "writer" : comment.writer,
+                "content" : comment.content
+            }
+            comments_json_list.append(comment_json)
+
+        return JsonResponse({
+            'status' : 200,
+            'message' : '게시글 댓글 목록 조회 성공',
+            'data' : comments_json_list
+        })
+
     
 from .serializers import PostSerializer
 

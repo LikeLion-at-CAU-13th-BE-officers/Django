@@ -25,3 +25,10 @@ class  Post(BaseModel):
 
     def __str__(self):
         return self.title
+    
+class Image(BaseModel):
+    id = models.AutoField(primary_key=True)
+    image_url = models.URLField(max_length=500)  # S3에 업로드된 이미지의 URL 저장
+
+    def __str__(self):
+        return f"Image {self.id}"

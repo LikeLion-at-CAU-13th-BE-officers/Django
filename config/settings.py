@@ -200,3 +200,71 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+LOGGING = {
+    'version': 1, # 로깅 설정 버전. 1로 고정
+    'disable_existing_loggers': False, # 기존에 정의된 로거들을 비활성화 할 지 여부. false로 두어 기존 로거 유지하며 새로 정의한 로거 추가 사용가능
+    # 로그 포맷 정의
+    'formatters': {
+        'simple': {
+            'format': '%(levelname)s %(message)s'
+        },
+        'detailed': {
+            'format': '%(asctime)s [%(levelname)s] %(name)s: %(message)s'
+        },
+        'request': {
+            'format': '%(asctime)s [%(levelname)s] %(message)s [%(pathname)s:%(lineno)d]'
+        },
+    },
+    # 로그 기록 방식 정의
+    'handlers': {
+        # django의 logging 모듈의 핸들러 클래스를 통해 콘솔에 출력할지, 파일로 저장할지 정함
+        'console': {
+            'class': 'logging.StreamHandler', # 콘솔에 출력
+            'formatter': 'simple',
+        },
+        'file': {
+            'class': 'logging.FileHandler', # 파일에 기록
+            'filename': os.path.join(BASE_DIR, 'logs', 'django.log'),
+            'formatter': 'detailed',
+        },
+        'error_file': {
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(BASE_DIR, 'logs', 'errors.log'),
+            'formatter': 'detailed',
+        },
+        'request_file': { 
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(BASE_DIR, 'logs', 'requests.log'),
+            'formatter': 'request',
+        },
+    },
+    # 어디의 로그를 기록할지 정의
+    'loggers': {
+        
+    # Django 전체 프로젝트 발생 로그 기록
+    # info 레별 이상의 로그를 console과 file에 기록
+    'django': {
+        'handlers': ['console', 'file'],
+        'level': 'INFO',
+    },
+    
+    # 요청 관련 에러 로그 기록
+    # info 레벨 이상 로그를 error_file, request_file에 기록
+    'django.request': {
+        'handlers': ['error_file', 'request_file'],
+        'level': 'INFO',
+        'propagate': False, # 상위 로거로 로그 전파 방지
+    },
+    
+    # 각 앱에서 발생하는 로그를 따로 기록
+    'accounts': {
+        'handlers': ['console', 'file'],
+        'level': 'DEBUG',
+    },
+    'posts': {
+        'handlers': ['console', 'file'],
+        'level': 'DEBUG',
+    },
+},
+}

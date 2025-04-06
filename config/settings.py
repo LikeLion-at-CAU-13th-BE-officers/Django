@@ -212,9 +212,6 @@ LOGGING = {
         'detailed': {
             'format': '%(asctime)s [%(levelname)s] %(name)s: %(message)s'
         },
-        'request': {
-            'format': '%(asctime)s [%(levelname)s] %(message)s [%(pathname)s:%(lineno)d]'
-        },
     },
     # 로그 기록 방식 정의
     'handlers': {
@@ -233,11 +230,6 @@ LOGGING = {
             'filename': os.path.join(BASE_DIR, 'logs', 'errors.log'),
             'formatter': 'detailed',
         },
-        'request_file': { 
-            'class': 'logging.FileHandler',
-            'filename': os.path.join(BASE_DIR, 'logs', 'requests.log'),
-            'formatter': 'request',
-        },
     },
     # 어디의 로그를 기록할지 정의
     'loggers': {
@@ -250,21 +242,10 @@ LOGGING = {
     },
     
     # 요청 관련 에러 로그 기록
-    # info 레벨 이상 로그를 error_file, request_file에 기록
+    # info 레벨 이상 로그를 error_file에 기록
     'django.request': {
-        'handlers': ['error_file', 'request_file'],
-        'level': 'INFO',
-        'propagate': False, # 상위 로거로 로그 전파 방지
-    },
-    
-    # 각 앱에서 발생하는 로그를 따로 기록
-    'accounts': {
-        'handlers': ['console', 'file'],
-        'level': 'DEBUG',
-    },
-    'posts': {
-        'handlers': ['console', 'file'],
-        'level': 'DEBUG',
+        'handlers': ['error_file'],
+        'level': 'WARNING',
     },
 },
 }

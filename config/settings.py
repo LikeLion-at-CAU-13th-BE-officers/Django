@@ -206,16 +206,29 @@ STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 DB_PW = get_secret("DB_PW")
-DB_HOST = get_secret("DB_HOST")
+#DB_HOST = get_secret("DB_HOST")
 
+# 로컬 연결용
+# `DATABASES = {
+# 	'default': {
+# 		'ENGINE': 'django.db.backends.mysql',
+# 		'NAME': "likelion13th",
+# 		'USER': "root", # root로 접속하여 DB를 만들었다면 'root'
+# 		'PASSWORD': DB_PW, # 비밀번호는 secrets.json에 저장
+# 		'HOST': 'localhost',
+# 		'PORT': '3306',
+# 	}
+# }
+
+# 원격 연결용
 DATABASES = {
 	'default': {
 		'ENGINE': 'django.db.backends.mysql',
 		'NAME': "likelion13th",
-		'USER': "admin", # root로 접속하여 DB를 만들었다면 'root'
+		'USER': "admin", # aws에서 만든 사용자명
 		'PASSWORD': DB_PW, # 비밀번호는 secrets.json에 저장
-		'HOST': DB_HOST,
-		'PORT': '3306',
+		'HOST': "127.0.0.1",
+		'PORT': '3307', # 터널에서 연결할 로컬 포트
 	}
 }
 
@@ -231,4 +244,4 @@ AWS_S3_OBJECT_PARAMETERS = {
     'CacheControl': 'max-age=86400',
 }
 
-DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage' # 장고의 기본 파일저장소 위치를 S3버킷으로 지정.
+#DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage' # 장고의 기본 파일저장소 위치를 S3버킷으로 지정.

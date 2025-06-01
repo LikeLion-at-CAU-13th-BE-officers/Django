@@ -210,16 +210,19 @@ class PostList(APIView):
         return Response(serializer.data)
 
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from .permissions import *
 class PostDetail(APIView):
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsOwnerOrReadOnly, BlockDuringMaintenanceHours]
 
     def get(self, request, post_id):
         post = get_object_or_404(Post, id=post_id)
+        self.check_object_permissions(request, post)
         serializer = PostSerializer(post)
         return Response(serializer.data)
     
     def put(self, request, post_id):
         post = get_object_or_404(Post, id=post_id)
+        self.check_object_permissions(request, post)
         serializer = PostSerializer(post, data=request.data)
         if serializer.is_valid(): # update이니까 유효성 검사 필요
             serializer.save()
@@ -228,5 +231,6 @@ class PostDetail(APIView):
     
     def delete(self, request, post_id):
         post = get_object_or_404(Post, id=post_id)
+        self.check_object_permissions(request, post)
         post.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)

@@ -188,7 +188,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "Asia.Seoul"
+TIME_ZONE = "Asia/Seoul"
 
 USE_I18N = True
 
@@ -258,28 +258,28 @@ DB_PW = get_secret("DB_PW")
 #DB_HOST = get_secret("DB_HOST")
 
 # 로컬 연결용
-# `DATABASES = {
-# 	'default': {
-# 		'ENGINE': 'django.db.backends.mysql',
-# 		'NAME': "likelion13th",
-# 		'USER': "root", # root로 접속하여 DB를 만들었다면 'root'
-# 		'PASSWORD': DB_PW, # 비밀번호는 secrets.json에 저장
-# 		'HOST': 'localhost',
-# 		'PORT': '3306',
-# 	}
-# }
-
-# 원격 연결용
 DATABASES = {
 	'default': {
 		'ENGINE': 'django.db.backends.mysql',
 		'NAME': "likelion13th",
-		'USER': "admin", # aws에서 만든 사용자명
+		'USER': "root", # root로 접속하여 DB를 만들었다면 'root'
 		'PASSWORD': DB_PW, # 비밀번호는 secrets.json에 저장
-		'HOST': "127.0.0.1",
-		'PORT': '3307', # 터널에서 연결할 로컬 포트
+		'HOST': 'localhost',
+		'PORT': '3306',
 	}
 }
+
+# 원격 연결용
+# DATABASES = {
+# 	'default': {
+# 		'ENGINE': 'django.db.backends.mysql',
+# 		'NAME': "likelion13th",
+# 		'USER': "admin", # aws에서 만든 사용자명
+# 		'PASSWORD': DB_PW, # 비밀번호는 secrets.json에 저장
+# 		'HOST': "127.0.0.1",
+# 		'PORT': '3307', # 터널에서 연결할 로컬 포트
+# 	}
+# }
 
 ###AWS###
 AWS_ACCESS_KEY_ID = get_secret("AWS_ACCESS_KEY_ID") # .csv 파일에 있는 내용을 입력 Access key ID. IAM 계정 관련

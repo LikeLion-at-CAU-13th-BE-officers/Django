@@ -254,7 +254,24 @@ from django.conf import settings
 import boto3
 import uuid
 import os
+from rest_framework.parsers import MultiPartParser
 class ImageUploadView(APIView):
+    parser_classes = [MultiPartParser]
+    
+    @swagger_auto_schema(
+        operation_summary="이미지 업로드",
+        operation_description="form-data 형식으로 이미지를 업로드합니다.",
+        manual_parameters=[
+            openapi.Parameter(
+                name="image",
+                in_=openapi.IN_FORM,
+                type=openapi.TYPE_FILE,
+                description="업로드할 이미지 파일",
+                required=True,
+            )
+        ],
+        responses={201: ImageSerializer, 400: '잘못된 요청'},
+    )
     def post(self, request):
         if 'image' not in request.FILES:
             return Response({"error": "No image file"}, status=status.HTTP_400_BAD_REQUEST)

@@ -252,6 +252,8 @@ from django.core.files.storage import default_storage
 from .serializers import ImageSerializer
 from django.conf import settings
 import boto3
+import uuid
+import os
 class ImageUploadView(APIView):
     def post(self, request):
         if 'image' not in request.FILES:
@@ -267,7 +269,11 @@ class ImageUploadView(APIView):
         )
 
         # S3에 파일 저장
-        file_path = f"uploads/{image_file.name}"
+        # 확장자 추출 및 유니크 파일명 생성
+        extension = os.path.splitext(image_file.name)[1]
+        unique_filename = f"{uuid.uuid4()}{extension}"
+        file_path = f"uploads/{unique_filename}"
+        
         # S3에 파일 업로드
         try:
             s3_client.put_object(

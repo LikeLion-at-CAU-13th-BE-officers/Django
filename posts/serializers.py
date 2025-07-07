@@ -2,7 +2,8 @@
 
 from rest_framework import serializers
 from .models import Post
-from config.custom_api_exceptions import PostConflictException
+from config.custom_api_exceptions import PostConflictException, PostLimitException
+import datetime
 
 class PostSerializer(serializers.ModelSerializer):
 
@@ -17,6 +18,10 @@ class PostSerializer(serializers.ModelSerializer):
   def validate(self, data):
     if Post.objects.filter(title=data['title']).exists():
       raise PostConflictException(detail=f"A post with title: '{data['title']}' already exists.")
+    
+    today = datetime.date.today()
+    if Post.objects.filter(user=data['user'], created__date=today).exists():
+      raise PostLimitException(detail="You can only create one post per day.")
     
     return data
 

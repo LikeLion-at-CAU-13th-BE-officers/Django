@@ -94,6 +94,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "allauth.account.middleware.AccountMiddleware",  
+    "config.middlewares.ExceptionHandlerMiddleware",  # 커스텀 예외 처리 미들웨어 추가
 ]
 
 ACCOUNT_EMAIL_REQUIRED = True          
@@ -107,6 +108,7 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
+    'EXCEPTION_HANDLER': 'config.custom_exception_handler.custom_exception_handler',  # 커스텀 예외 처리 함수 지정
 }
 
 REST_USE_JWT = True
@@ -208,16 +210,16 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 DB_PW = get_secret("DB_PW")
 DB_HOST = get_secret("DB_HOST")
 
-DATABASES = {
-	'default': {
-		'ENGINE': 'django.db.backends.mysql',
-		'NAME': "likelion13th",
-		'USER': "admin", # root로 접속하여 DB를 만들었다면 'root'
-		'PASSWORD': DB_PW, # 비밀번호는 secrets.json에 저장
-		'HOST': DB_HOST,
-		'PORT': '3306',
-	}
-}
+# DATABASES = {
+# 	'default': {
+# 		'ENGINE': 'django.db.backends.mysql',
+# 		'NAME': "likelion13th",
+# 		'USER': "admin", # root로 접속하여 DB를 만들었다면 'root'
+# 		'PASSWORD': DB_PW, # 비밀번호는 secrets.json에 저장
+# 		'HOST': DB_HOST,
+# 		'PORT': '3306',
+# 	}
+# }
 
 ###AWS###
 AWS_ACCESS_KEY_ID = get_secret("AWS_ACCESS_KEY_ID") # .csv 파일에 있는 내용을 입력 Access key ID. IAM 계정 관련

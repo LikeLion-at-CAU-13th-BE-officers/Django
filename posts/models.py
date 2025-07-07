@@ -10,7 +10,7 @@ class BaseModel(models.Model):
         abstract = True
 
 
-class  Post(BaseModel):
+class Post(BaseModel):
 
     CHOICES = (
         ('STORED', '보관'),
@@ -25,10 +25,32 @@ class  Post(BaseModel):
 
     def __str__(self):
         return self.title
-    
+
 class Image(BaseModel):
     id = models.AutoField(primary_key=True)
     image_url = models.URLField(max_length=500)  # S3에 업로드된 이미지의 URL 저장
 
     def __str__(self):
         return f"Image {self.id}"
+      
+class Comment(BaseModel):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comment')
+    id = models.AutoField(primary_key=True)
+    writer = models.CharField(max_length=10)
+    content = models.TextField()
+    
+    def __str__(self):
+        return self.writer
+
+
+class Category(models.Model):
+    id = models.AutoField(primary_key=True)
+    category_name = models.CharField(max_length=30)
+
+    def __str__(self):
+        return self.category_name
+
+
+class PostCategory(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.SET_NULL, null = True, blank = True, related_name='post')
+    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null = True, blank = True, related_name='cateogry')

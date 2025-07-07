@@ -22,3 +22,7 @@ class ConflictException(BaseCustomAPIException):
 class PostConflictException(ConflictException):
     default_detail = "A conflict occurred with the post."
     default_code = "POST-CONFLICT"
+
+class PostLimitException(ConflictException):
+    default_detail = "You can only create one post per day."
+    default_code = "POST-DAILY-LIMIT-EXCEEDED"
